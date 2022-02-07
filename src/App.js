@@ -1,23 +1,29 @@
-import logo from './logo.svg';
-import './App.css';
+import { useSelector, useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { getVehicleData } from "./store/index";
 
 function App() {
+  const dispatch = useDispatch();
+  const vehiclesList = useSelector((state) => state.vehicles.vehiclesList);
+
+  useEffect(() => {
+    dispatch(getVehicleData());
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      {vehiclesList.map((obj) => {
+        return (
+          <div key={obj.id}>
+            <h2>{obj.name}</h2>
+            <ul>
+              {obj.vehicles.map(vehicle => {
+                return <li key={vehicle.id}>{vehicle.name}</li>
+              })}
+            </ul>
+          </div>
+        );
+      })}
     </div>
   );
 }
