@@ -2,6 +2,10 @@ import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { getVehicleData } from "./store/index";
 
+import List from "@mui/material/List";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemText from "@mui/material/ListItemText";
+
 function App() {
   const dispatch = useDispatch();
   const vehiclesList = useSelector((state) => state.vehicles.vehiclesList);
@@ -12,13 +16,15 @@ function App() {
 
   return (
     <div>
-      {vehiclesList.map((obj) => {
+      {vehiclesList.map((car) => {
         return (
-          <div key={obj.id}>
-            <h2>{obj.name}</h2>
+          <div key={car.id}>
+            <h2>{car.name}</h2>
             <ul>
-              {obj.vehicles.map(vehicle => {
-                return <li key={vehicle.id}>{vehicle.name}</li>
+              {car.vehicles.map(vehicle => {
+                return (
+                  <li key={vehicle.id}>{vehicle.name}</li>
+                );
               })}
             </ul>
           </div>
