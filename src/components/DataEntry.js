@@ -1,7 +1,19 @@
-import "./DataEntry.css";
+import * as React from "react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { postToVehicleData, postToBrandData } from "../store/vehiclesSlice";
+
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
+import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+
+import "./DataEntry.css";
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 const DataEntry = () => {
   const dispatch = useDispatch();
@@ -9,21 +21,49 @@ const DataEntry = () => {
   const [brandName, setBrandName] = useState("");
   const [vehicleName, setVehicleName] = useState("");
 
-  const runThrowData = () => {
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState({
+    message: "",
+    severity: "",
+  });
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpen(false);
+  };
+
+  const capitalizeLeadingLetter = (str) => str.charAt(0).toUpperCase() + str.toLowerCase().slice(1);
+
+  const runThroughData = () => {
     for (let brand of vehiclesList) {
       if (brand.name.toLowerCase() === brandName.toLowerCase()) {
         for (let vehicle of brand.vehicles) {
           if (vehicle.name.toLowerCase() === vehicleName.toLowerCase()) {
-            return true; //Error: Vehicle Already Exists
+            setVehicleName("");
+            setMessage({
+              message: "Error: Vehicle Already Exists",
+              severity: "error",
+            });
+            setOpen(true);
+            return true;
           }
         }
         dispatch(
           postToVehicleData({
-            brandExists: true,
             brandId: brand.id,
-            vehicle: vehicleName,
+            vehicle: capitalizeLeadingLetter(vehicleName),
           })
         );
+        setBrandName("");
+        setVehicleName("");
+        setMessage({
+          message: "Vehicle Successfully Added!",
+          severity: "success",
+        });
+        setOpen(true);
         return true;
       }
     }
@@ -31,19 +71,29 @@ const DataEntry = () => {
   };
 
   const handleSendData = () => {
-    const added = runThrowData();
+    const added = runThroughData();
     if (added === false) {
-      if (vehicleName.length > 0) {
+      if (vehicleName.length > 0 && brandName.length > 0) {
         dispatch(
           postToBrandData({
-            name: brandName,
-            vehicleName: vehicleName,
+            name: capitalizeLeadingLetter(brandName),
+            vehicleName: capitalizeLeadingLetter(vehicleName),
             vehicleBrandId: vehiclesList.length + 1,
           })
         );
-        runThrowData();
+        setBrandName("");
+        setVehicleName("");
+        setMessage({
+          message: "Vehicle Successfully Added!",
+          severity: "success",
+        });
+        setOpen(true);
       } else {
-        return "Please Enter A Vehicle Model.";
+        setMessage({
+          message: "Error: One or more of the text fields are empty",
+          severity: "error",
+        });
+        setOpen(true);
       }
     }
   };
@@ -52,9 +102,6 @@ const DataEntry = () => {
     event.preventDefault();
 
     handleSendData();
-
-    setBrandName("");
-    setVehicleName("");
   };
 
   const brandHandler = (event) => {
@@ -67,23 +114,42 @@ const DataEntry = () => {
 
   return (
     <div>
-      <form onSubmit={submitHandler}>
-        <input
-          value={brandName}
-          id="brand_input"
-          type="text"
-          placeholder="Brand Name"
-          onChange={brandHandler}
-        />
-        <input
-          value={vehicleName}
-          id="vehicle_input"
-          type="text"
-          placeholder="Vehicle Name"
-          onChange={vehicleHandler}
-        />
-        <button type="submit">Post Data</button>
-      </form>
+      <Snackbar
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        open={open}
+        autoHideDuration={6000}
+        onClose={handleClose}
+      >
+        <Alert
+          onClose={handleClose}
+          severity={message.severity}
+          sx={{ width: "100%" }}
+        >
+          {message.message}
+        </Alert>
+      </Snackbar>
+      <Box
+        component="form"
+        sx={{
+          "& > :not(style)": { m: 1, width: "25ch" },
+        }}
+        noValidate
+        autoComplete="off"
+        onSubmit={submitHandler}
+      >
+        <TextField onChange={brandHandler} value={brandName} id="brand-input" label="Brand" variant="outlined" />
+        <TextField onChange={vehicleHandler} value={vehicleName} id="vehicle-input" label="Vehicle" variant="outlined" />
+        <Button
+          sx={{
+            backgroundColor: "gray",
+          }}
+          type="submit"
+          variant="contained"
+          size="large"
+        >
+          Add New Vehicle
+        </Button>
+      </Box>
     </div>
   );
 };

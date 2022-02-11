@@ -5,10 +5,8 @@ import { getVehicleData } from "../store/vehiclesSlice";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
 
 import "./DataTable.css";
 
@@ -16,7 +14,7 @@ const DataTable = () => {
   const dispatch = useDispatch();
   const vehiclesList = useSelector((state) => state.vehicles.vehiclesList);
   const isEmpty = useSelector((state) => state.vehicles.isEmpty);
-  const isLoading = useSelector(state => state.vehicles.isLoading);
+  const isLoading = useSelector((state) => state.vehicles.isLoading);
   const dataChanged = useSelector((state) => state.vehicles.dataUpdated);
   const displayData = [];
 
@@ -47,7 +45,7 @@ const DataTable = () => {
   displayData.sort(compare);
 
   return (
-    <TableContainer component={Paper}>
+    <div>
       {!isEmpty && !isLoading && (
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
@@ -83,7 +81,7 @@ const DataTable = () => {
       )}
       {isEmpty && !isLoading && <p className="message">No Data Found</p>}
       {isLoading && <p className="message">Loading...</p>}
-    </TableContainer>
+    </div>
   );
 };
 
