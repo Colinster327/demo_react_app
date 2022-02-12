@@ -35,7 +35,8 @@ const DataEntry = () => {
     setOpen(false);
   };
 
-  const capitalizeLeadingLetter = (str) => str.charAt(0).toUpperCase() + str.toLowerCase().slice(1);
+  const capitalizeLeadingLetter = (str) =>
+    str.charAt(0).toUpperCase() + str.toLowerCase().slice(1);
 
   const runThroughData = () => {
     for (let brand of vehiclesList) {
@@ -50,6 +51,7 @@ const DataEntry = () => {
             setOpen(true);
             return true;
           }
+          return false;
         }
         dispatch(
           postToVehicleData({
@@ -74,6 +76,7 @@ const DataEntry = () => {
     const added = runThroughData();
     if (added === false) {
       if (vehicleName.length > 0 && brandName.length > 0) {
+        let brandId = null;
         dispatch(
           postToBrandData({
             name: capitalizeLeadingLetter(brandName),
@@ -137,8 +140,20 @@ const DataEntry = () => {
         autoComplete="off"
         onSubmit={submitHandler}
       >
-        <TextField onChange={brandHandler} value={brandName} id="brand-input" label="Brand" variant="outlined" />
-        <TextField onChange={vehicleHandler} value={vehicleName} id="vehicle-input" label="Vehicle" variant="outlined" />
+        <TextField
+          onChange={brandHandler}
+          value={brandName}
+          id="brand-input"
+          label="Brand"
+          variant="outlined"
+        />
+        <TextField
+          onChange={vehicleHandler}
+          value={vehicleName}
+          id="vehicle-input"
+          label="Vehicle"
+          variant="outlined"
+        />
         <Button
           sx={{
             backgroundColor: "gray",

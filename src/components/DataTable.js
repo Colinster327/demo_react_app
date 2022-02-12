@@ -1,6 +1,7 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { getVehicleData } from "../store/vehiclesSlice";
+import { vehiclesActions } from "../store/vehiclesSlice";
 
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -41,6 +42,10 @@ const DataTable = () => {
     }
     return comparison;
   };
+
+  if(displayData.length > 0) {
+    dispatch(vehiclesActions.setIsEmpty(false));
+  }
 
   displayData.sort(compare);
 

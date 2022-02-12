@@ -35,9 +35,6 @@ export const getVehicleData = () => {
 
     if (responceData.length > 0) {
       dispatch(vehiclesSlice.actions.setData(responceData));
-      dispatch(vehiclesSlice.actions.setIsEmpty(false));
-    } else {
-      dispatch(vehiclesSlice.actions.setIsEmpty(true));
     }
 
     dispatch(vehiclesSlice.actions.setIsLoading());
