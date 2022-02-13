@@ -30,7 +30,7 @@ export const getVehicleData = () => {
   return async (dispatch) => {
     dispatch(vehiclesSlice.actions.setIsLoading());
 
-    const responce = await fetch("http://127.0.0.1:8000/vehicles/brands/");
+    const responce = await fetch(process.env.REACT_APP_DEFAULT_PATH + "/vehicles/brands/");
     const responceData = await responce.json();
 
     if (responceData.length > 0) {
@@ -43,7 +43,7 @@ export const getVehicleData = () => {
 
 export const postToVehicleData = (data) => {
   return async (dispatch) => {
-    const responce = await fetch("http://127.0.0.1:8000/vehicles/vehicles/", {
+    const responce = await fetch(process.env.REACT_APP_DEFAULT_PATH + "/vehicles/vehicles/", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -59,7 +59,7 @@ export const postToVehicleData = (data) => {
 
 export const postToBrandData = (data) => {
   return async (dispatch) => {
-    const responce = await fetch("http://127.0.0.1:8000/vehicles/brands/", {
+    const responce = await fetch(process.env.REACT_APP_DEFAULT_PATH + "/vehicles/brands/", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name: data.name }),

@@ -76,7 +76,6 @@ const DataEntry = () => {
     const added = runThroughData();
     if (added === false) {
       if (vehicleName.length > 0 && brandName.length > 0) {
-        let brandId = null;
         dispatch(
           postToBrandData({
             name: capitalizeLeadingLetter(brandName),
