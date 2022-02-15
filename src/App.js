@@ -1,6 +1,6 @@
 import "./App.css";
-import DataTable from "./components/DataTable";
-import DataEntry from "./components/DataEntry";
+import DataTable from "./components/DataTable/DataTable";
+import DataEntry from "./components/DataEntry/DataEntry";
 
 import TableContainer from "@mui/material/TableContainer";
 import Paper from "@mui/material/Paper";

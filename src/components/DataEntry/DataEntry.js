@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { postToVehicleData, postToBrandData } from "../store/vehiclesSlice";
+import { postToVehicleData, postToBrandData } from "../../store/vehiclesSlice/actionCreators";
 
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
@@ -36,13 +36,13 @@ const DataEntry = () => {
   };
 
   const capitalizeLeadingLetter = (str) =>
-    str.charAt(0).toUpperCase() + str.toLowerCase().slice(1);
+    str.trim().charAt(0).toUpperCase() + str.trim().toLowerCase().slice(1);
 
   const runThroughData = () => {
     for (let brand of vehiclesList) {
-      if (brand.name.toLowerCase() === brandName.toLowerCase()) {
+      if (brand.name.toLowerCase().trim() === brandName.toLowerCase().trim()) {
         for (let vehicle of brand.vehicles) {
-          if (vehicle.name.toLowerCase() === vehicleName.toLowerCase()) {
+          if (vehicle.name.toLowerCase().trim() === vehicleName.toLowerCase().trim()) {
             setVehicleName("");
             setMessage({
               message: "Error: Vehicle Already Exists",
@@ -51,7 +51,6 @@ const DataEntry = () => {
             setOpen(true);
             return true;
           }
-          return false;
         }
         dispatch(
           postToVehicleData({
@@ -80,7 +79,6 @@ const DataEntry = () => {
           postToBrandData({
             name: capitalizeLeadingLetter(brandName),
             vehicleName: capitalizeLeadingLetter(vehicleName),
-            vehicleBrandId: vehiclesList.length + 1,
           })
         );
         setBrandName("");
